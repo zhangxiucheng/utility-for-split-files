@@ -4,6 +4,22 @@ buffersize = 1024 * 1024  #split a file (1MB per package) by default
 filesep = '\n'
 
 def split(fromfile, todir, buffersize=buffersize):
+    """
+    help text:
+        fromfile is the abs path to the file you want to process
+
+    todir:
+        the directory to store your package
+        supposed to be empty
+        if not files in todir will be deleted
+
+    buffersize:
+        max size of one split part of your aim file
+        buffersize = 1 means 1 bit is the max size of one split part file
+    
+    an extra config.in file will be craeted to store package config info
+    this file will be used when func join(frompackage, todir, ifclean=False) is called
+    """
     if not os.path.exists(todir):
         os.mkdir(todir)
     else:
@@ -33,6 +49,18 @@ def split(fromfile, todir, buffersize=buffersize):
     return partnum
 
 def join(frompackage, todir, ifclean=False):
+    """
+    recover your split files from packages
+
+    frompackage:
+        abs directory to packages
+
+    todir:
+        location where to store your file
+
+    ifclean:
+        wether you want to keep part files
+    """
     configobj = open(os.path.join(frompackage, 'config.in'), 'r')
     tofilename = configobj.readline()[:-1]
     buffersize = int(configobj.readline(), 10)
